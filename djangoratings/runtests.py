@@ -1,29 +1,19 @@
 #!/usr/bin/env python
 import sys
 
+import os
 from os.path import dirname, abspath
 
-from django.conf import settings
+os.environ['DJANGO_SETTINGS_MODULE'] = 'djangoratings.tests.settings'
 
-if not settings.configured:
-    settings.configure(
-        DATABASE_ENGINE='sqlite3',
-        INSTALLED_APPS=[
-            'django.contrib.auth',
-            'django.contrib.contenttypes',
-            'djangoratings',
-        ]
-    )
-
-from django.test.simple import run_tests
+from django.test.simple import DjangoTestSuiteRunner
 
 
 def runtests(*test_args):
-    if not test_args:
-        test_args = ['djangoratings']
-    parent = dirname(abspath(__file__))
-    sys.path.insert(0, parent)
-    failures = run_tests(test_args, verbosity=1, interactive=True)
+    # parent = dirname(abspath(__file__))
+    # sys.path.insert(0, parent)
+    test_runner = DjangoTestSuiteRunner()
+    failures = test_runner.run_tests(['tests'])
     sys.exit(failures)
 
 
